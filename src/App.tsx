@@ -8,12 +8,14 @@ import Textarea from '@mui/joy/Textarea';
 function App() {
 
   const [text, setText] = useState("");
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     if (text.length <= 200) {
       try {
         const response = await axios.get(`http://localhost:8080/fetch?text=${encodeURIComponent(text)}`);
         console.log("Response:", response.data);
+        setImageUrls((response.data as string[]).map((id) => `images/${id}-200.png`));
       } catch (error) {
         console.error("An error occurred:", error);
       }
@@ -34,8 +36,16 @@ function App() {
         }}
       />
       <Button onClick={handleSubmit}>Submit</Button>
+      {
+        imageUrls.map((imageUrl) => <img src={imageUrl} />)
+      }
     </Box>
   );
 }
+
+
+
+
+
 
 export default App;
